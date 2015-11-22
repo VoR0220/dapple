@@ -6,6 +6,30 @@ var deasync = require('deasync');
 var ipfs = ipfsAPI('localhost', '5001') // leaving out the arguments will default to these values
 
 module.exports = class IPFS {
+    
+    addFile(file) {
+        var hash = ipfs.add(file, function(err, res) {
+            if(err || !res) return console.error(err)
+            
+            return res;
+        });
+        while(hash === undefined) {
+            deasync.runLoopOnce();
+        }
+    }
+    
+    addDir(directory) {
+        var files = fs.readdirSync(directory);
+        var hashes = ipfs.add(files, function(err, res) {
+            if(err || !res) return console.error(err)
+            
+            return res;
+        });
+        while(hashes === undefined) {
+            deasync.runLoopOnce();
+        }
+    }
+    
     getSync(hash, destination_path, recursive) {
         var file;
         if( recursive !== undefined ) {
