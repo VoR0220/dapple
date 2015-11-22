@@ -1,5 +1,5 @@
 var assert = require("assert");
-var nop = function(){};
+var ipfs = require('../lib/ipfs.js');
 
 describe("dapple IPFS wrapper", function() {
     it("adds and gets local flat files", function() {
