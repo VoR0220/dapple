@@ -1,26 +1,39 @@
+"use strict";
 var fs = require('fs');
 var ipfsAPI = require('ipfs-api');
 var deasync = require('deasync');
 
 // connect to ipfs daemon API server
-var ipfs = ipfsAPI('localhost', '5001') // leaving out the arguments will default to these values
+var ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'}); // leaving out the arguments will default to these values
 
 module.exports = class IPFS {
     
-    addFile(file) {
-        var hash = ipfs.add(file, function(err, res) {
+    addFileSync(file) {
+        var hash;
+        ipfs.add(file, function (err, res) {
             if(err || !res) return console.error(err)
-            
-            return res;
+
+            hash = res;
         });
         while(hash === undefined) {
             deasync.runLoopOnce();
-        }
+        } 
+        return hash;
+    }
+
+    addFile(file) {
+        ipfs.add(file, function (err, res) {
+            if(err || !res) return console.error(err)
+
+            hash = res;
+            return hash;
+        });
+        
     }
     
     addDir(directory) {
         var files = fs.readdirSync(directory);
-        var hashes = ipfs.add(files, function(err, res) {
+        var hashes = ipfs.add(files, {recursive: true}, function(err, res) {
             if(err || !res) return console.error(err)
             
             return res;
