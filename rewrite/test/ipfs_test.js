@@ -19,4 +19,5 @@ describe("dapple IPFS wrapper", function() {
     it("gets a remote file from IPFS", function(){
 
     });
+
 });

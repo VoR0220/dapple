@@ -1,21 +1,44 @@
 var assert = require("assert");
-var fs = require("fs");
+var fs = require("../lib/file");
+var tmp = require("tmp");
 var Workspace = require("../lib/workspace");
+var constants = require("../lib/constants");
 var testenv = require("./testenv");
-var workspace = new Workspace(testenv.example_package_dir);
+var path = require("path");
+var dircompare = require("dir-compare");
 
 
-describe("Workspace module tests for example package", function() {
-    it("virtual package contracts are loaded", function() {
-        var sourcepath = workspace.dapple_class_sources['dapple/test.sol'];
-        var solcode = fs.readFileSync(sourcepath).toString();
-        assert(solcode.indexOf("contract Test") !== -1, "Test contract not found");
-        sourcepath = workspace.dapple_class_sources['dapple/debug.sol'];
-        solcode = fs.readFileSync(sourcepath).toString();
-        assert(solcode.indexOf("contract Debug") !== -1, "Debug contract not found");
+describe("class Workspace", function() {
+    it(" .initialize(emptydir) matches golden version", function() {
+        var dir = fs.tmpdir();
+        Workspace.initialize(dir)
+        // fs.copySync(dir, testenv.golden.INIT_EMPTY_DIR); //  Create a new golden record
+        var diff = dircompare.compareSync(dir, testenv.golden.INIT_EMPTY_DIR);
+        assert( diff.same );
     });
-    it("loads local .sol source tree", function() {
+    it("finds dappfile in subdirectory", function(done) {
+        assert( Workspace.findWorkspaceRoot(path.join(testenv.golden_package_dir, "subdirectory")) );
+        done();
+    });
+    it("initializes successfully in golden package", function(done) {
+        var workspace = new Workspace(testenv.golden_package_dir);
+        done();
+    });
+    it("loads local .sol source tree", function(done) {
+        var workspace = new Workspace(testenv.golden_package_dir);
         var sources = workspace.loadWorkspaceSources();
         assert.deepEqual( Object.keys(sources), [ 'example.sol','example_test.sol','subdirectory/example2.sol'] );
+        done();
+    });
+    it("findWorkspaceRoot returns undefined if it hits root", function(done) {
+        var dir = fs.tmpdir();
+        assert.equal(undefined, Workspace.findWorkspaceRoot(dir));
+        done();
+    });
+    it.skip("findWorkspaceRoot returns undefined if it hits .dapplerc", function(done) {
+        var dir = "TODO";
+        var workspace = new Workspace(testenv.golden_package_dir);
+        assert.equal( undefined, workspace.findWorkspaceRoot(dir) );
+        done();
     });
 });
