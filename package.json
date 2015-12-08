@@ -1,0 +1,62 @@
+{
+  "name": "dapple",
+  "version": "0.0.0",
+  "description": "dapp development tool",
+  "keywords": [
+    "dapp",
+    "ethereum",
+    "solidity",
+    "EVM"
+  ],
+  "license": "MIT",
+  "author": "Nikolai Mushegian <nikolai@nexusdev.us>",
+  "contributors": [
+    {
+      "name": "Ryan Casey",
+      "email": "ryan@nexusdev.us"
+    }
+  ],
+  "homepage": "dapple.info",
+  "bugs": {
+    "url": "https://github.com/NexusDevelopment/dapple/issues"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test/*"
+  },
+  "main": "cmd/main.js",
+  "bin": {
+    "dapple": "./cmd/main.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "bin": "cmd",
+    "doc": "docs",
+    "defaults": "defaults"
+  },
+  "dependencies": {
+    "chai": "^3.4.1",
+    "deasync": "^0.1.4",
+    "dir-compare": "0.0.2",
+    "docopt": "^0.6.2",
+    "ethereumjs-lib": "^1.0.1",
+    "fs-extra": "^0.26.2",
+    "fs-readdir-recursive": "^1.0.0",
+    "geth": "^0.1.4",
+    "glob-fs": "^0.1.6",
+    "mkdirp": "^0.5.1",
+    "mocha": "^2.3.4",
+    "read-yaml": "^1.0.0",
+    "solc": "^0.1.6",
+    "tmp": "0.0.28",
+    "underscore": "^1.8.3",
+    "vinyl-fs": "^2.2.1",
+    "web3": "^0.15.1"
+  },
+  "engines": {
+    "node": ">=5.0.0"
+  },
+  "devDependencies": {
+    "groc": "^0.8.0",
+    "gulp": "^3.9.0"
+  }
+}
